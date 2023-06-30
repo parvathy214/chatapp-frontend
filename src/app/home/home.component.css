@@ -1,0 +1,17 @@
+.button-container {
+    display: flex;
+  }
+  
+  /* .button {
+    margin-right: 20px;
+  }
+   */
+  .button-container #b1{
+    margin-right: 10px;
+    width: 100px;
+  } 
+  .button-container #b2{
+    margin-left: 10px;
+    width: 100px;
+
+  } 

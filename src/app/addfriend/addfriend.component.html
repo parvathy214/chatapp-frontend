@@ -1,0 +1,24 @@
+
+
+
+<div class="container">
+    <div class="row">
+        <div class="col-4"></div>
+        <div class="col">
+            <form [formGroup]="inviteform"  style="width: 50%;">
+                <h6 style="text-align: center;">ADD FRIEND</h6> <br>
+                <div class="mb-3">
+                  <label for="text" class="form-label">User Name</label>
+                  <input type="text" class="form-control" formControlName="name" >
+                </div>
+                <div class="mb-3">
+                  <label for="exampleInputEmail1" class="form-label">Email address</label>
+                  <input type="email" class="form-control" formControlName="email">
+                </div>
+                
+                <button type="submit" class="btn btn-primary" (click)="invite()" >send</button>
+              </form>
+        </div>
+
+    </div>
+</div>

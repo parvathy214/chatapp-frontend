@@ -1,0 +1,44 @@
+<!-- First form -->
+<div class="screen" *ngIf="!showOTPForm">
+    <div class="container">
+      <div class="row justify-content-center mt-2 pt-5">
+        <div class="col-6">
+          <form #emailForm="ngForm" (ngSubmit)="onSubmit(emailForm)">
+            <h3 style="text-align: center;color: rgb(150, 143, 143);">Forgot Paasword</h3>
+            <br><br>
+            <div class="form-group">
+              <label for="exampleInputEmail1">Email address</label><br><br>
+              <input type="email" class="form-control" id="exampleInputEmail1" aria-describedby="emailHelp"
+                name="email" [(ngModel)]="User.email" placeholder="Enter email" required>
+            </div><br>
+            <button type="submit" class="btn btn-primary">Submit</button>
+          </form>
+        </div>
+      </div>
+    </div>
+  </div>
+  
+  <!-- Second form -->
+  <div class="screen" *ngIf="showOTPForm">
+    <div class="container">
+      <div class="row justify-content-center mt-2 pt-5">
+        <div class="col-6">
+          <form #otpForm="ngForm" (ngSubmit)="Verify(otpForm)">
+            <h3 style="text-align: center;color: #968f8f;">OTP FORM</h3> <br><br>
+            <div class="form-group">
+                <label for="exampleInputEmail1">Email address</label><br><br>
+                <input type="email" class="form-control" id="exampleInputEmail1" aria-describedby="emailHelp"
+                  name="email" [(ngModel)]="User2.email" placeholder="Enter email" required>
+              </div><br>
+            <div class="form-group">
+              <label for="exampleInputOtp">Enter OTP</label><br><br>
+              <input type="text" class="form-control" id="exampleInputOtp" aria-describedby="emailHelp"
+                name="otp" [(ngModel)]="User2.otp" placeholder="Enter OTP" required>
+            </div><br><br>
+            <button type="submit" class="btn btn-primary" >Submit</button>
+          </form>
+        </div>
+      </div>
+    </div>
+  </div>
+  
