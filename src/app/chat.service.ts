@@ -37,6 +37,13 @@ export class ChatService {
 
  }
 
+ muteUsers(data:any){
+  return this.http.put(`${this.api}/mute_users`,{data})
+}
+
+unMuteUser(data:any){
+  return this.http.put(`${this.api}/unmute_users`,{data})
+}
 
 }
 

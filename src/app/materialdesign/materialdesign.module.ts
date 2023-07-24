@@ -4,12 +4,12 @@ import { MatSlideToggleModule } from '@angular/material/slide-toggle';
 import {MatFormFieldModule} from '@angular/material/form-field';
 import {MatCardModule} from '@angular/material/card';
 import {MatDividerModule} from '@angular/material/divider';
-import {
-  MatSnackBar,
-  MatSnackBarHorizontalPosition,
-  MatSnackBarVerticalPosition,
-} from '@angular/material/snack-bar';
-
+import {MatSnackBarModule} from '@angular/material/snack-bar';
+import {MatButtonModule} from '@angular/material/button';
+import {MatInputModule} from '@angular/material/input';
+// import {MatSnackBarHorizontalPosition,
+//   MatSnackBarVerticalPosition} from
+// import { from } from 'rxjs';
 
 
 @NgModule({
@@ -18,8 +18,11 @@ import {
     CommonModule,
     
   ],
-  exports:[MatSlideToggleModule,MatFormFieldModule,
-           MatCardModule,MatDividerModule
+  exports:[
+           MatSlideToggleModule,MatFormFieldModule,
+           MatCardModule,MatDividerModule,MatSnackBarModule,
+           MatButtonModule,MatInputModule
+
 
 
 

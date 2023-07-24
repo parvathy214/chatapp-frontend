@@ -2,19 +2,27 @@ import { Component,ElementRef, ViewChild } from '@angular/core';
 import { BackendService } from '../backend.service';
 import { FormBuilder } from '@angular/forms';
 import { ActivatedRoute, Router } from '@angular/router';
-import { ChangeDetectorRef } from '@angular/core';
-import { Subscription } from 'rxjs';
 import { ChatService } from '../chat.service';
 import { io } from 'socket.io-client';
+import {MatSnackBar,MatSnackBarHorizontalPosition,
+  MatSnackBarVerticalPosition,} from '@angular/material/snack-bar';
+
 
 
 @Component({
   selector: 'app-chatroom',
   templateUrl: './chatroom.component.html',
   styleUrls: ['./chatroom.component.css']
+
 })
 
+
+
 export class ChatroomComponent {
+
+
+  horizontalPosition: MatSnackBarHorizontalPosition = 'end';
+  verticalPosition: MatSnackBarVerticalPosition = 'top';
 
   uid: any;
   fid: any;
@@ -57,8 +65,9 @@ export class ChatroomComponent {
     private fb: FormBuilder,
     private route: ActivatedRoute,
     private router: Router,
-    private messageservice: ChatService
-  ) {}
+    private messageservice: ChatService,
+    private snackBar: MatSnackBar
+    ) {}
 
   
   ngOnInit() {
@@ -67,46 +76,51 @@ export class ChatroomComponent {
       this.chatroom(fid);
       // this.fetchMessage()
     });
- this.uid =  localStorage.getItem('userid')
- this.blocklist()
+    this.uid =  localStorage.getItem('userid')
+    // this.sendMessage();
+    this.blocklist()
 
   }
 
+
   chatroom(fid: any) {
     console.log('chatroom function executed');
-    let userid = localStorage.getItem('userid');
+    // let userid = this.chatService.getUserId();
+    // this.messageservice.setUserId(userid);
+    let userid = localStorage.getItem('userid')
     console.log('userid:', userid);
-  
+
     if (fid) {
       this.chatService.chatdetails(userid, fid).subscribe((res: any) => {
         this.frienddetails = res.data;
         this.receiver = this.frienddetails.username;
         console.log('Friend name:', this.frienddetails);
-        console.log(this.frienddetails.username);
-        this.userName = this.frienddetails.username;
-        this.status = this.frienddetails.status;
-  
-        this.socket = io('http://localhost:3001');
-        this.messages = [];
-  
-        this.userDetails.recipient = this.userName;
-        this.socket.emit('register', this.userDetails);
-        this.socket.on('old_message', (oldMsg) => {
-          this.messages = oldMsg;
-        });
-         
-        
-      });
-      //  Listen for messages
+        console.log(this.frienddetails.username)
+        this.userName =  this.frienddetails.username
+        this.status = this.frienddetails.status
+    this.socket = io('http://localhost:3001')
+    this.messages = []
+
+    this.userDetails.recipient = this.userName
+    this.socket.emit('register', this.userDetails);
+    this.socket.on('old_message', (oldMsg) => {       
+      // console.log("from backend ",oldMsg);
+      this.messages = oldMsg
+
+    })
+       // Listen for messages
        this.socket.on('new_message', (message) => {
         console.log(message)
         this.messages.push(message)
         console.log(this.messages);
 
       });
+
+
+      });
     }
+    
   }
-  
   ngOnDestroy() {
     if (this.socket) {
       this.socket.disconnect();
@@ -114,7 +128,23 @@ export class ChatroomComponent {
   }
 
 
- 
+  // for showing notification on incoming messages
+  openSnackBar(msg:any) {
+    if(msg.sender == localStorage.getItem('user')){
+      return
+    }else if(this.mutedUsers.includes(this.userDetails.recipient)){
+      return
+    }
+    else{
+      this.snackBar.open(`${msg.sender} : ${msg.msg}`, 'Close', {
+        horizontalPosition: this.horizontalPosition,
+        verticalPosition: this.verticalPosition,
+        duration: 9000
+      });
+    }
+    
+     
+  }
   sendMessage() {
  
     if(this.newMessage != ""){
@@ -134,6 +164,7 @@ export class ChatroomComponent {
   this.profiledetails = res.data;
   console.log('logineduser profile details', this.profiledetails);
   this.blockedUsers = this.profiledetails.blockedUsers || [];
+  this.mutedUsers = this.profiledetails.mutedUsers
   this.route.queryParams.subscribe((params) => {
   const fid = params['fid'];   
   console.log('blocklist fid is ',fid)
@@ -165,6 +196,25 @@ export class ChatroomComponent {
 
   })
   }
+
+
+ // mute function
+ muteUser(){
+  this.messageservice.muteUsers(this.userDetails).subscribe(res=>{
+    console.log(res);
+    this.blocklist()
+
+  })
+}
+
+//Unmute function
+unMuteUser(){
+  this.messageservice.unMuteUser(this.userDetails).subscribe(res=>{
+    console.log(res);
+    this.blocklist()
+  })
+}
+
   
   }
 
