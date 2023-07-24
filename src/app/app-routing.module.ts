@@ -9,22 +9,33 @@ import { ChatroomComponent } from './chatroom/chatroom.component';
 import { AddfriendComponent } from './addfriend/addfriend.component';
 
 const routes: Routes = [
-  {path:'',component:HomeComponent,
-  children:[
-    {path:'signup',component:SignupComponent},
-    {path:'login',component:LoginComponent}
-]
-},
-  {path:'forgot',component:ForgotComponent},
 
-  {path:'land/:id',component:LandingComponent,
-   children:[
-    {path:'chatroom/:fid',component:ChatroomComponent}
-
+{
+  path: '',
+  component: HomeComponent,
+  children: [
+    { path: 'signup', component: SignupComponent },
+    { path: 'login', component: LoginComponent },
   ]
 },
-  {path:'addfriend/:id',component:AddfriendComponent},
-  { path: 'chatroom', component: ChatroomComponent }
+{ path: 'forgot', component: ForgotComponent },
+{
+  path: 'land/:id',
+  component: LandingComponent,
+  children: [
+    {
+      path: 'chatroom',
+      component: ChatroomComponent,
+      runGuardsAndResolvers: 'always' // Ensure component re-initialization
+    },
+    {
+      path: 'chatroom/:fid',
+      component: ChatroomComponent,
+      runGuardsAndResolvers: 'always' // Ensure component re-initialization
+    }
+  ]
+},
+{ path: 'addfriend/:id', component: AddfriendComponent }
 ];
 
 @NgModule({

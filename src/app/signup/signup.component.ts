@@ -14,9 +14,10 @@ export class SignupComponent  {
 
  constructor(private api:BackendService ,private fb:FormBuilder,private router:Router){}
     user : any
+    
    Signupform= this.fb.group(
     {
-      name :['',[Validators.required,Validators.pattern('^[a-zA-Z]+$'),,this.usernameValidator]],
+      name :['',[Validators.required,Validators.pattern('^[a-zA-Z]+$')]],
       username:['',[Validators.required, Validators.pattern('^[a-zA-Z0-9]+$')]],
       email:['',[Validators.required, Validators.email]],
       password:['', [Validators.required, Validators.minLength(6)]],
@@ -29,27 +30,25 @@ export class SignupComponent  {
    get signup():any{
     return this.Signupform.controls;
   }
-
-
-
-usernameValidator(control: AbstractControl): Promise<ValidationErrors | null> {
-  const username = control.value;
-
-  return new Promise((resolve, reject) => {
-    this.api.existinguser(username).subscribe(
-      (res: any) => {
-        if (res.message === "user already exists") {
-          resolve({ 'usernameExists': true });
-        } else {
-          resolve(null);
-        }
-      },
-      (error) => {
-        resolve(null); // Rejecting the promise with `null` will not set the error
+  value = ''
+  error:any
+   usernameval(event:any){
+    this.value = event.target.value ;
+    // console.log(this.value)
+    this.api.existinguser(this.value).subscribe((res:any)=>{
+      if(res.message === "username taken"){
+        let message = "username already taken"
+        console.log(message)
+        // this.error = true;
+        this.Signupform.get('username')?.setErrors({ 'usernameExists': true });
       }
-    );
-  });
-}
+      else {
+        this.Signupform.get('username')?.setErrors(null); 
+      }
+    })
+   }
+
+
 
    passwordMatchValidator(control: AbstractControl): { [key: string]: boolean } | null {
     const password = control.get('password');
@@ -73,7 +72,8 @@ usernameValidator(control: AbstractControl): Promise<ValidationErrors | null> {
       alert("username is taken");
     }
     else{
-      this.router.navigate(['land/:id'])
+      alert("signup success!!! please login")
+      this.router.navigate([''])
     }
   })
 

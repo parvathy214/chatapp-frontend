@@ -4,7 +4,11 @@ import { MatSlideToggleModule } from '@angular/material/slide-toggle';
 import {MatFormFieldModule} from '@angular/material/form-field';
 import {MatCardModule} from '@angular/material/card';
 import {MatDividerModule} from '@angular/material/divider';
-
+import {
+  MatSnackBar,
+  MatSnackBarHorizontalPosition,
+  MatSnackBarVerticalPosition,
+} from '@angular/material/snack-bar';
 
 
 
@@ -16,6 +20,9 @@ import {MatDividerModule} from '@angular/material/divider';
   ],
   exports:[MatSlideToggleModule,MatFormFieldModule,
            MatCardModule,MatDividerModule
+
+
+
 
   ]
 })

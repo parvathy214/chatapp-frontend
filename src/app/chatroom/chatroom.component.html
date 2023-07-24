@@ -1,43 +1,79 @@
-<div class="chat">
+               
+  <div class="chat" style="background-color: rgb(39, 38, 37); border-radius: 10px;">
     <div class="chat-header clearfix">
-        <div class="row">
-            <div class="col-lg-6">
-                <a href="javascript:void(0);" data-toggle="modal" data-target="#view_info">
-                    <img src="https://bootdey.com/img/Content/avatar/avatar2.png" alt="avatar">
-                </a>
-                <div class="chat-about" >
-                    <h6 class="m-b-0">{{ friendname?.username}}</h6> 
-                    <small>Last seen: 2 hours ago</small>
-                </div>
-            </div>
-            <div class="col-lg-6 hidden-sm text-right">
-                <a href="javascript:void(0);" class="btn btn-outline-secondary"><i class="fa fa-camera"></i></a>
-                <a href="javascript:void(0);" class="btn btn-outline-primary"><i class="fa fa-image"></i></a>
-                <a href="javascript:void(0);" class="btn btn-outline-info"><i class="fa fa-cogs"></i></a>
-                <a href="javascript:void(0);" class="btn btn-outline-warning"><i class="fa fa-question"></i></a>
-            </div>
+      <div class="row">
+        <div class="col-lg-6">
+          <a href="javascript:void(0);" data-toggle="modal" data-target="#view_info">
+            <img src="https://bootdey.com/img/Content/avatar/avatar2.png" alt="avatar">
+          </a>
+          <div class="chat-about"> 
+            <h6 class="m-b-0" style="color: white;" >{{ frienddetails?.username}}</h6>
+            <i class="fa fa-circle " [ngStyle]="{'color': status=== 'online' ? '#198754' : '#dc3545'}" ></i><span  style="color: white;"  >{{status}}</span>
+          </div>
         </div>
-    </div>
-    <div class="chat-history">
-        <ul class="m-b-0">
-            <li class="clearfix">
-                <div   id="#chat" *ngFor="let message of messageList">
-                    <li>
-                        {{message}}
-                    </li>  
-                </div>
-                </li>
-            
-        </ul>
-    </div>
-    <div class="chat-message clearfix">
-        <div class="input-group mb-0">
-            <div class="input-group-prepend">
-                <span class="input-group-text"><i class="fa fa-send"></i></span>
-            </div>
-            <input type="text" class="form-control" placeholder="Enter text here..."  [(ngModel)]="newMessage" (keyup)="$event.keyCode == 13 && sendMessage()" >                                    
-            <button (click)="sendMessage()">Send Message</button> 
+        <div class="col-lg-6 hidden-sm d-flex justify-content-end align-items-center">
+          <!-- <a href="javascript:void(0);" class="btn btn-outline-secondary"><i class="fa fa-camera"></i></a>
+          <a href="javascript:void(0);" class="btn btn-outline-primary"><i class="fa fa-image"></i></a>
+          <a href="javascript:void(0);" class="btn btn-outline-info"><i class="fa fa-cogs"></i></a>
+          <a href="javascript:void(0);" class="btn btn-outline-warning"><i class="fa fa-question"></i></a> -->
+          <div class="dropdown">
+              <i class="bi bi-three-dots-vertical  "  style="color: white;" data-bs-toggle="dropdown" aria-expanded="false"></i>
+            <ul class="dropdown-menu"  >
+              <li><a class="dropdown-item" href="#"><i class="bi bi-volume-mute-fill"></i>Mute</a></li>
+              <li><a class="dropdown-item" href="#"><i class="bi bi-volume-down-fill"></i>Unmute</a></li>
+              <li><a class="dropdown-item"   (click)="blockUser()" *ngIf="blockedUsers.indexOf(userDetails.recipient) === -1" ><i class="bi bi-person-slash"></i>Block</a></li>
+              <li><a class="dropdown-item"   (click)="unblockUser()" *ngIf="blockedUsers.includes(userDetails.recipient)" ><i class="bi bi-person-fill-check"></i>UnBlock</a></li>
+            </ul>
+          </div>
+          <a  [routerLink]="['/land', uid]" style="margin-left: 30px;"  ><i   class="bi bi-x"  style="color: white;" ></i></a>
 
         </div>
+
+      </div>
     </div>
-</div>
+   
+  
+    <div style="background-image: url('../../assets/chatbackground.jfif'); padding-top: 30px;  ">
+      <div class="chatbox-body" #scrollMe style="max-height: 400px; overflow-y: auto;">
+        <div>
+          <div class="messages" *ngFor="let message of messages">
+            <div class="receive-msg" *ngIf="message.receiver === msg.sender" style="padding-bottom: 10px;" >
+              <p class="msg-para">{{ message.msg }}</p>
+            </div>
+            <div class="send-container" *ngIf="message.sender === msg.sender">
+              <div class="send-msg">
+                <p class="msg-para">{{ message.msg }}</p>
+              </div>
+              
+              
+            </div>
+          </div>
+        </div>
+      </div>
+    </div>
+  </div>
+  <div class="chat-footer">
+    <div class="row">
+      <div class="col-md-10">
+        <div class="form-group mb-0">
+          <input type="text"  style="border-radius: 4 px ; border: 1px solid gray;"
+          *ngIf="!(blockedUsers?.includes(userDetails.recipient) || recipientBlockedUsers?.includes(userDetails.sender))"
+            placeholder="Type a message"
+                 class="form-control"
+                 [(ngModel)]="newMessage" (keyup)="$event.keyCode == 13 && sendMessage()"/>
+        </div>
+        <h5 *ngIf="blockedUsers?.includes(userDetails.recipient)">
+          You blocked this contact !
+        </h5>
+        <h5 *ngIf="recipientBlockedUsers?.includes(userDetails.sender) && !blockedUsers?.includes(userDetails.recipient)">
+          You have been blocked !
+        </h5>
+      </div>
+      <div class="col-md-2 text-center align-self-center">
+        <button class="btn btn-primary btn-sm px-3" style="width:100%;"
+        *ngIf="!(blockedUsers?.includes(userDetails.recipient) || recipientBlockedUsers?.includes(userDetails.sender))"
+                (click)="sendMessage()">Send
+        </button>
+      </div>
+    </div>
+  </div>

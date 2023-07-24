@@ -1,8 +1,10 @@
 import { Component } from '@angular/core';
 import { BackendService } from '../backend.service';
 import { FormBuilder,FormGroup } from '@angular/forms';
-import { ElementRef, ViewChild } from '@angular/core';
 import { ActivatedRoute, ActivatedRouteSnapshot, Router } from '@angular/router';
+import { ChatService } from '../chat.service';
+import { io } from 'socket.io-client';
+
 
 @Component({
   selector: 'app-landing',
@@ -11,15 +13,19 @@ import { ActivatedRoute, ActivatedRouteSnapshot, Router } from '@angular/router'
 })
 
 export class LandingComponent {
-  
+
+  statusArray: string[] = [];
   inviteform:any;
   userdash:any;
   friend:any[] = [];
   friendsdata:any;
   friendname:any
+  activestatus:any
+  socket = io('http://localhost:3001');
 
+  
   constructor(private chatService: BackendService,private fb:FormBuilder,private route:ActivatedRoute,
-    private router :Router){
+    private router :Router,private messageservice:ChatService){
    
     this.inviteform = this.fb.group({
       name:[''],
@@ -28,13 +34,15 @@ export class LandingComponent {
 
 
   }
+ 
 
   ngOnInit(){
     
-    this.uniquelogin()
-   
+    this.uniquelogin();
+    this.socket.emit('loggedinusers',localStorage.getItem('userid'));
+    // this.onlinestatus()
   }
-
+  
   invite() {
     let friend = this.inviteform.value;
     let userid = this.route.snapshot.params['id'];
@@ -62,17 +70,59 @@ export class LandingComponent {
     // console.log(userid)
     this.chatService.uniquelanding(userid).subscribe((res:any)=>{
         this. userdash = res.data;
+        this.chatService.setfriends(this.userdash.friends);
+        console.log(this.userdash)
+        this.onlinestatus()
        
     })
   }
-  chathead(fid:any){
+     onlinestatus(){
+
+     const friendslist=   this.chatService.getfriends()
+     for(let i=0;i<friendslist.length;i++){
+      let chatfriend = friendslist[i]
+      console.log('for loop friend friend')
+      this.chatService.onlinestatus(chatfriend).subscribe((res:any)=>{
+        this.activestatus =  res.data
+         console.log(this.activestatus)
+         this.statusArray.push(this.activestatus);
+         console.log(this.statusArray)
+       })
+      }
+   }
+  // onlinestatus(){
+  //   this.socket = io('http://localhost:3001');
+  //   const friendslist=   this.chatService.getfriends()
+  //   for(let i=0;i<friendslist.length;i++){
+  //    let chatfriend = friendslist[i]
+  //    console.log('for loop friend friend')
+  //    this.chatService.onlinestatus(chatfriend).subscribe((res:any)=>{
+  //      this.activestatus =  res.data
+  //       console.log(this.activestatus)
+  //       this.statusArray.push(this.activestatus);
+  //       console.log(this.statusArray)
+  //     })
+       
+  //    }
+  // }
+    chathead(fid:any){
     console.log(fid)
     let userid = this.route.snapshot.params['id'];
         console.log(userid)
-        this.chatService.setUserId(userid);
-      this.router.navigate(['land', userid, 'chatroom', fid]);
+    this.router.navigate(['land', userid, 'chatroom'], { queryParams: { fid: fid } });
+
 
   }
- 
   
+ 
+  logout(){
+    let userid= localStorage.getItem('userid')
+    this.chatService.userlogout(userid).subscribe((res:any)=>{
+      console.log('loggedout')
+     let status = res.data;
+
+    })
+    this.router.navigate(['']);
+
+  }
 }

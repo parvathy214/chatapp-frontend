@@ -35,7 +35,8 @@ import { AddfriendComponent } from './addfriend/addfriend.component';
     BrowserAnimationsModule,
     MaterialdesignModule,
     ReactiveFormsModule,
-    FormsModule
+    FormsModule,
+  
   ],
   providers: [BackendService],
   bootstrap: [AppComponent]

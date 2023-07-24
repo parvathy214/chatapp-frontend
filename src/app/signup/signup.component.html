@@ -18,12 +18,14 @@
             </div>
           </div>
 					<label for="user" class="label">Username</label>
-					<input id="user" type="text" class="input" placeholder="Create your Username"
+					<input id="user" type="text" class="input" placeholder="Create your Username"  (keyup)="usernameval($event)"
           formControlName="username" [ngClass]="{'is-invalid':signup.username.errors&&(signup.username.touched ||signup.username.dirty)}">
-				  <span class="error-message" *ngIf="Signupform.hasError('usernameExists')">Username already taken</span> 
-                <div *ngIf="signup.username.invalid&&(signup.username.touched||signup.username.dirty)" class="invalid-feedback">
+                <div *ngIf="(signup.username.invalid&&(signup.username.touched||signup.username.dirty))" class="invalid-feedback">
                   <p *ngIf="signup.username.errors.required">Field can't be empty</p>
                   <p *ngIf="signup.username.errors.pattern">Invalid Format</p>
+                  <!-- <span class="error-message" *ngIf="Signupform.hasError('usernameExists')">Username already taken</span>  -->
+                  <!-- <span *ngIf="signup.username.errors.usernameExists">Username already taken</span> -->
+                  <span *ngIf="signup.username.errors.usernameExists">Username already taken</span>
                 </div>
         </div>
         <div class="group">

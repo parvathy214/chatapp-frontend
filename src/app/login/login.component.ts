@@ -2,6 +2,7 @@ import { Component } from '@angular/core';
 import { FormBuilder,Validators, } from '@angular/forms';
 import { BackendService } from '../backend.service';
 import { Router } from '@angular/router';
+import { ChatService } from '../chat.service';
 
 @Component({
   selector: 'app-login',
@@ -12,7 +13,7 @@ export class LoginComponent {
 // userid:;
 userid !: string;
 
-  constructor(private fb:FormBuilder,private api:BackendService,private router:Router){}
+  constructor(private fb:FormBuilder,private api:BackendService,private router:Router,private messageservice:ChatService){}
 
   loginform =this.fb.group(
     {
@@ -28,16 +29,18 @@ userid !: string;
 enter(){
   let value = this.loginform.value;
  this.api.userlogin(value).subscribe((res:any)=>{
+  let userData = res.data
+  console.log(this.userid)
+  localStorage.setItem('username', userData.username);
+  localStorage.setItem('userid', userData.userid);
+  console.log(userData)
   if (res.status === 200) {
     alert("Login Success");
-    this.userid = res.id
     console.log("login front from back");
-    console.log(this.userid)
     console.log(res.token);
     if(res.token){
       localStorage.setItem('token',res.token)
-      this.router.navigate(['land',this.userid]);
-
+      this.router.navigate(['land',userData.userid]);
     }
   } else if (res.status === 500) {
     alert("Incorrect password");

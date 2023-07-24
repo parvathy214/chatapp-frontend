@@ -1,42 +1,35 @@
 import { Injectable } from '@angular/core';
 import { HttpClient } from '@angular/common/http';
 import { io } from 'socket.io-client';
-import { Observable ,BehaviorSubject} from 'rxjs';
+
 
 @Injectable({
   providedIn: 'root'
 })
 export class BackendService {
 
-  private userid!: string;
+  private friends!: string;
 
-
-  public message$: BehaviorSubject<string> = new BehaviorSubject('');
 
   constructor(private http: HttpClient) { }  
 
-  socket = io('http://localhost:3001');
 
   api ='http://localhost:3000';
 
+   
 
-  setUserId(userid: string) {
-    this.userid = userid;
-  }
-  getUserId() {
-    return this.userid;
-  }
-  public sendMessage(message:any) {
-    this.socket.emit('message', message);
-  }
 
-  public getNewMessage = () => {
-    this.socket.on('message', (message) =>{
-      this.message$.next(message);
-    });
-    
-    return this.message$.asObservable();
-  };
+  setfriends(friends:any) {
+    this.friends= friends;
+    console.log('service fis is :',friends)
+
+  }
+  getfriends() {
+    console.log('get friens func',this.friends)
+
+    return this.friends;
+  }
+  
 
 
 
@@ -46,9 +39,11 @@ adduser(value:any){
   return this.http.post(`${this.api}/signup`,value)
 }
 
-//existinguser
-existinguser(username: string){
-  return this.http.get(`${this.api}?username=${username}`)
+//existingusername
+existinguser(value:any){
+  console.log(value)
+
+  return this.http.get(`${this.api}/username/${value}`)
 }
 //userlogin
 userlogin(value:any){
@@ -71,9 +66,10 @@ displayfriends(){
  return this.http.get(`${this.api}/friendslist`)
 }
 uniquelanding(userid:any){
+  console.log('reached uniq service for loggie=ned user',userid)
 return this.http.get(`${this.api}/uniquelogin/${userid}`)
 }
-chatdetails(userid:any,fid:any){
+ chatdetails(userid:any,fid:any){
   console.log("reached chat head service")
   console.log(userid);
   console.log(fid);
@@ -81,4 +77,26 @@ chatdetails(userid:any,fid:any){
   return this.http.get(`${this.api}/chatroom/${userid}/${fid}`)
 
 }
+
+userlogout(userid:any){
+  console.log("reached log out service")
+
+  return this.http.get(`${this.api}/logout/${userid}`)
+  
+}
+
+onlinestatus(friendname:any){
+  console.log("reached online service")
+  console.log(friendname)
+  const username=friendname.username
+  console.log(username)
+
+  return this.http.get(`${this.api}/active/${username}`)
+
+
+}
+
+
+
+
 }
