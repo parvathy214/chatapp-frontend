@@ -6,6 +6,7 @@ import { ChatService } from '../chat.service';
 import { io } from 'socket.io-client';
 import {MatSnackBar,MatSnackBarHorizontalPosition,
   MatSnackBarVerticalPosition,} from '@angular/material/snack-bar';
+import { Clipboard } from '@angular/cdk/clipboard';
 
 
 
@@ -20,7 +21,7 @@ import {MatSnackBar,MatSnackBarHorizontalPosition,
 
 export class ChatroomComponent {
 
-
+  copiedMessageIndices: number[] = []; // Array to store the indices of copied messages
   horizontalPosition: MatSnackBarHorizontalPosition = 'end';
   verticalPosition: MatSnackBarVerticalPosition = 'top';
 
@@ -66,7 +67,8 @@ export class ChatroomComponent {
     private route: ActivatedRoute,
     private router: Router,
     private messageservice: ChatService,
-    private snackBar: MatSnackBar
+    private snackBar: MatSnackBar,
+    private clipboard :Clipboard
     ) {}
 
   
@@ -110,8 +112,9 @@ export class ChatroomComponent {
     })
        // Listen for messages
        this.socket.on('new_message', (message) => {
-        console.log(message)
-        this.messages.push(message)
+        console.log(message);
+        this.openSnackBar(message);
+        this.messages.push(message);
         console.log(this.messages);
 
       });
@@ -121,16 +124,13 @@ export class ChatroomComponent {
     }
     
   }
-  ngOnDestroy() {
-    if (this.socket) {
-      this.socket.disconnect();
-    }
-  }
+  
 
 
   // for showing notification on incoming messages
   openSnackBar(msg:any) {
-    if(msg.sender == localStorage.getItem('user')){
+    console.log('message sender is',msg.sender);
+    if(msg.sender == localStorage.getItem('username')){
       return
     }else if(this.mutedUsers.includes(this.userDetails.recipient)){
       return
@@ -138,7 +138,7 @@ export class ChatroomComponent {
     else{
       this.snackBar.open(`${msg.sender} : ${msg.msg}`, 'Close', {
         horizontalPosition: this.horizontalPosition,
-        verticalPosition: this.verticalPosition,
+        // verticalPosition: this.verticalPosition,
         duration: 9000
       });
     }
@@ -200,7 +200,9 @@ export class ChatroomComponent {
 
  // mute function
  muteUser(){
-  this.messageservice.muteUsers(this.userDetails).subscribe(res=>{
+  console.log("muter users func")
+  this.messageservice.muteUsers(this.userDetails
+    ).subscribe(res=>{
     console.log(res);
     this.blocklist()
 
@@ -215,7 +217,28 @@ unMuteUser(){
   })
 }
 
+
+ngOnDestroy() {
+  if (this.socket) {
+    this.socket.disconnect();
+  }
+}
   
+
+
+copyToClipboard(message: string,index: number) {
+  this.clipboard.copy(message);
+  this.showPopover(index);
+
+}
+showPopover(index: number) {
+  const popoverDuration = 2000; // Duration in milliseconds
+  this.copiedMessageIndices.push(index); // Add the index of the copied message to the array
+  setTimeout(() => {
+    this.copiedMessageIndices = this.copiedMessageIndices.filter((i) => i !== index); // Remove the index from the array after the specified duration
+  }, popoverDuration);
+}
+
   }
 
 

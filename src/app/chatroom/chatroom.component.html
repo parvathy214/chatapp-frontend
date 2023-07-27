@@ -4,7 +4,7 @@
       <div class="row">
         <div class="col-lg-6">
           <a href="javascript:void(0);" data-toggle="modal" data-target="#view_info">
-            <img src="https://bootdey.com/img/Content/avatar/avatar2.png" alt="avatar">
+            <img src="https://bootdey.com/img/Content/avatar/avatar1.png" alt="avatar">
           </a>
           <div class="chat-about"> 
             <h6 class="m-b-0" style="color: white;" >{{ frienddetails?.username}}</h6>
@@ -19,10 +19,10 @@
           <div class="dropdown">
               <i class="bi bi-three-dots-vertical  "  style="color: white;" data-bs-toggle="dropdown" aria-expanded="false"></i>
             <ul class="dropdown-menu"  >
-              <li><a class="dropdown-item" href="#"><i class="bi bi-volume-mute-fill"></i>Mute</a></li>
-              <li><a class="dropdown-item" href="#"><i class="bi bi-volume-down-fill"></i>Unmute</a></li>
-              <li><a class="dropdown-item"   (click)="blockUser()" *ngIf="blockedUsers.indexOf(userDetails.recipient) === -1" ><i class="bi bi-person-slash"></i>Block</a></li>
-              <li><a class="dropdown-item"   (click)="unblockUser()" *ngIf="blockedUsers.includes(userDetails.recipient)" ><i class="bi bi-person-fill-check"></i>UnBlock</a></li>
+              <li><a class="dropdown-item" (click)="muteUser()" *ngIf="mutedUsers.indexOf(userDetails.recipient) === -1"><i class="bi bi-volume-mute-fill"></i>Mute</a></li>
+              <li><a class="dropdown-item" (click)="unMuteUser()" *ngIf="mutedUsers.includes(userDetails.recipient)"><i class="bi bi-volume-down-fill"></i>Unmute</a></li>
+              <li><a class="dropdown-item" (click)="blockUser()" *ngIf="blockedUsers.indexOf(userDetails.recipient) === -1" ><i class="bi bi-person-slash"></i>Block</a></li>
+              <li><a class="dropdown-item"  (click)="unblockUser()" *ngIf="blockedUsers.includes(userDetails.recipient)" ><i class="bi bi-person-fill-check"></i>UnBlock</a></li>
             </ul>
           </div>
           <a  [routerLink]="['/land', uid]" style="margin-left: 30px;"  ><i   class="bi bi-x"  style="color: white;" ></i></a>
@@ -36,16 +36,18 @@
     <div style="background-image: url('../../assets/chatbackground.jfif'); padding-top: 30px;  ">
       <div class="chatbox-body" #scrollMe style="max-height: 400px; overflow-y: auto;">
         <div>
-          <div class="messages" *ngFor="let message of messages">
+          <div class="messages" *ngFor="let message of messages;let i=index">
             <div class="receive-msg" *ngIf="message.receiver === msg.sender" style="padding-bottom: 10px;" >
-              <p class="msg-para">{{ message.msg }}</p>
+              <i class="bi bi-clipboard-fill" (click)="copyToClipboard(message.msg,i)"  ></i> <p class="msg-para">{{ message.msg }}</p>
+              <span   *ngIf="copiedMessageIndices.includes(i)"  >Message copied!</span>
             </div>
             <div class="send-container" *ngIf="message.sender === msg.sender">
               <div class="send-msg">
-                <p class="msg-para">{{ message.msg }}</p>
+                <span   *ngIf="copiedMessageIndices.includes(i)"  >Message copied!</span>
+
+                <i class="bi bi-clipboard-fill" (click)="copyToClipboard(message.msg,i)"  ></i> <p class="msg-para">{{ message.msg }}</p>
+
               </div>
-              
-              
             </div>
           </div>
         </div>

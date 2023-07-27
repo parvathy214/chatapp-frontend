@@ -63,7 +63,7 @@ export class SignupComponent  {
   
   Submit(){
     let value = this.Signupform.value;
-    console.log(value)
+    console.log('signup form value is ',value)
   this.api.adduser(value).subscribe((res:any)=>{
     if (res.message === "user already exists"){
       alert("user already exists")

@@ -30,13 +30,12 @@ enter(){
   let value = this.loginform.value;
  this.api.userlogin(value).subscribe((res:any)=>{
   let userData = res.data
-  console.log(this.userid)
+  console.log('userid is',this.userid)
   localStorage.setItem('username', userData.username);
   localStorage.setItem('userid', userData.userid);
-  console.log(userData)
+  console.log('userdata is',userData)
   if (res.status === 200) {
     alert("Login Success");
-    console.log("login front from back");
     console.log(res.token);
     if(res.token){
       localStorage.setItem('token',res.token)

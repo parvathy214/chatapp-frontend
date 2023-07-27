@@ -19,11 +19,13 @@ export class LandingComponent {
   userdash:any;
   friend:any[] = [];
   friendsdata:any;
-  friendname:any
-  activestatus:any
+  friendname:any;
+  activestatus:any;
+  dp:any;
+  url:any;
   socket = io('http://localhost:3001');
-
   
+
   constructor(private chatService: BackendService,private fb:FormBuilder,private route:ActivatedRoute,
     private router :Router,private messageservice:ChatService){
    
@@ -34,13 +36,13 @@ export class LandingComponent {
 
 
   }
- 
 
   ngOnInit(){
-    
-    this.uniquelogin();
+
     this.socket.emit('loggedinusers',localStorage.getItem('userid'));
     // this.onlinestatus()
+      this.uniquelogin();
+
   }
   
   invite() {
@@ -67,16 +69,23 @@ export class LandingComponent {
   
   uniquelogin(){
     let userid = this.route.snapshot.params['id'];
-    // console.log(userid)
+    console.log(userid)
     this.chatService.uniquelanding(userid).subscribe((res:any)=>{
         this. userdash = res.data;
         this.chatService.setfriends(this.userdash.friends);
         console.log(this.userdash)
-        this.onlinestatus()
-       
+        this.onlinestatus();
+        this.dp = res.data.pic;
+        console.log(this.dp)
+        // this.url ='./assets/'
+
     })
+
+
   }
      onlinestatus(){
+      // this.statusArray = [];
+
 
      const friendslist=   this.chatService.getfriends()
      for(let i=0;i<friendslist.length;i++){
@@ -90,21 +99,9 @@ export class LandingComponent {
        })
       }
    }
-  // onlinestatus(){
-  //   this.socket = io('http://localhost:3001');
-  //   const friendslist=   this.chatService.getfriends()
-  //   for(let i=0;i<friendslist.length;i++){
-  //    let chatfriend = friendslist[i]
-  //    console.log('for loop friend friend')
-  //    this.chatService.onlinestatus(chatfriend).subscribe((res:any)=>{
-  //      this.activestatus =  res.data
-  //       console.log(this.activestatus)
-  //       this.statusArray.push(this.activestatus);
-  //       console.log(this.statusArray)
-  //     })
-       
-  //    }
-  // }
+
+  
+  
     chathead(fid:any){
     console.log(fid)
     let userid = this.route.snapshot.params['id'];
@@ -122,7 +119,9 @@ export class LandingComponent {
      let status = res.data;
 
     })
+    localStorage.removeItem('token')
     this.router.navigate(['']);
 
   }
+
 }

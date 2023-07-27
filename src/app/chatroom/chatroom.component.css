@@ -200,3 +200,14 @@ body {
   background-color:  rgb(177, 166, 166) /* Set the background color for message sender */
 }
 
+.bi-clipboard-fill{
+  color: rgb(80, 64, 64);
+  visibility: hidden;
+
+}
+
+.receive-msg:hover .bi-clipboard-fill,
+.send-msg:hover .bi-clipboard-fill {
+  visibility: visible;
+}
+

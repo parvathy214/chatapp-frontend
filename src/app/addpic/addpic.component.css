@@ -1,0 +1,34 @@
+
+.btn{
+    width: 30%;
+}
+form{
+    
+    width:50%;
+    height: 50%;
+    padding-top:50px;
+    padding-bottom:10px;
+    padding-left: 100px;
+    padding-right: 100px;
+    margin: 0 auto;
+    margin-top: 50px;
+    /* background-color: transparent; */
+    background-color: #fff;
+    border-radius: 0.2em ;
+    border: 2px solid  rgb(205, 210, 213) ;
+    box-shadow: 0 0 10px rgba(0, 0, 0, 0.2);
+}
+
+.screen{
+
+    
+        position: absolute;
+        top: 0;
+        left: 0;
+        width: 100%;
+        height: 100%;
+        margin-top: 100px;
+    
+      
+
+}

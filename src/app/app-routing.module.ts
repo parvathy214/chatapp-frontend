@@ -7,6 +7,8 @@ import { LoginComponent } from './login/login.component';
 import { ForgotComponent } from './forgot/forgot.component';
 import { ChatroomComponent } from './chatroom/chatroom.component';
 import { AddfriendComponent } from './addfriend/addfriend.component';
+import { AddpicComponent } from './addpic/addpic.component';
+import { AuthGuard } from './auth.guard';
 
 const routes: Routes = [
 
@@ -20,22 +22,23 @@ const routes: Routes = [
 },
 { path: 'forgot', component: ForgotComponent },
 {
-  path: 'land/:id',
+  path: 'land/:id',canActivate:[AuthGuard],
   component: LandingComponent,
   children: [
     {
-      path: 'chatroom',
+      path: 'chatroom',canActivate:[AuthGuard],
       component: ChatroomComponent,
       runGuardsAndResolvers: 'always' // Ensure component re-initialization
     },
     {
-      path: 'chatroom/:fid',
+      path: 'chatroom/:fid',canActivate:[AuthGuard],
       component: ChatroomComponent,
       runGuardsAndResolvers: 'always' // Ensure component re-initialization
     }
   ]
 },
-{ path: 'addfriend/:id', component: AddfriendComponent }
+{ path: 'addfriend/:id',canActivate:[AuthGuard], component: AddfriendComponent },
+{ path :'pic',component:AddpicComponent}
 ];
 
 @NgModule({

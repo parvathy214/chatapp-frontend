@@ -1,0 +1,11 @@
+<div  class="screen" style="background-size: cover;">
+    <form >
+        <h3  style="color: rgb(150, 143, 143);text-align:center;">UPLOAD FILE</h3>
+        
+            <div class="input-group mb-3" style="margin-top: 100px;">
+                <input  #singleInput type="file" name="csv" class="form-control" id="inputGroupFile02 " (change)="selectfile($event)"><br>
+              </div>
+              <button type="submit" class="btn btn-primary"  (click)="addpic()">Upload</button> 
+          
+    </form>
+</div>
