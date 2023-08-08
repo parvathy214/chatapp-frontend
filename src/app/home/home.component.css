@@ -1,5 +1,6 @@
 .button-container {
     display: flex;
+    
   }
   
   /* .button {
@@ -9,9 +10,11 @@
   .button-container #b1{
     margin-right: 10px;
     width: 100px;
+    background-color: rgb(216, 179, 110);
   } 
   .button-container #b2{
     margin-left: 10px;
     width: 100px;
+    background-color:  rgb(216, 179, 110);
 
   } 

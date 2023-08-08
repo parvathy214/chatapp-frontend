@@ -1,18 +1,18 @@
 <app-header></app-header>
-<div class="conatiner"   style="margin-bottom: 50px;" >  
-    <div class="row"  style="margin-left: 100px;margin-top: 200px;">
+<div class="conatiner"   style="margin-bottom: 50px; " >  
+    <div class="row"  style="margin-left: 100px;">
         <div class="col-6 mt-5">
-         <div>
+         <div  style="margin-top: 200px;">
             <h2  style="color:  #22215d;;">Welcome to Chat app</h2>
              <h5  style="color: #5a8c8c; ;" >A Real Time Chat Application</h5>
              <br>
              <div class="button-container">
-                <button id="b1"  type="button" class="btn btn-success"  (click)="SignupForm()">SignUp</button>
-                <button  id="b2"  type="button" class="btn btn-success"(click)="LoginForm()" >LogIn</button>
+                <button id="b1"  type="button" class="btn btn"  (click)="SignupForm()">SignUp</button>
+                <button  id="b2"  type="button" class="btn btn"(click)="LoginForm()" >LogIn</button>
             </div>            
         </div>
         </div>
-         <div class="col-6">
+         <div class="col-6"  style="margin-top:150px;" >
             <ng-container *ngIf="showLoginForm && !showSignupForm">
                 <app-login></app-login>
               </ng-container>

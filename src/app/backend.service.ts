@@ -44,6 +44,7 @@ existinguser(value:any){
 
   return this.http.get(`${this.api}/username/${value}`)
 }
+
 //userlogin
 userlogin(value:any){
   return this.http.post(`${this.api}/login`,value)
@@ -69,12 +70,12 @@ displayfriends(){
  return this.http.get(`${this.api}/friendslist`)
 }
 
-//
+//for displaying unique details of the user
 uniquelanding(userid:any){
-return this.http.get(`${this.api}/uniquelogin/${userid}`)
+return this.http.get<any>(`${this.api}/uniquelogin/${userid}`)
 }
 
-
+// to display details in chatbox
  chatdetails(userid:any,fid:any){
   return this.http.get(`${this.api}/chatroom/${userid}/${fid}`)
 }
@@ -82,6 +83,7 @@ return this.http.get(`${this.api}/uniquelogin/${userid}`)
 userlogout(userid:any){
   return this.http.get(`${this.api}/logout/${userid}`) 
 }
+
 
 onlinestatus(friendname:any){
   console.log(friendname)
@@ -98,7 +100,15 @@ addpic(formdata:any,userid:any){
 
 }
 
+profilepic(userid:any){
+  console.log('reached dp service',userid)
+  return this.http.get(`${this.api}/displaypic/${userid}`);
+
+}
+
 gettoken() :boolean{
   return !!localStorage.getItem('token')
 }
+
+
 }

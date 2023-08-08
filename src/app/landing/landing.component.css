@@ -138,6 +138,13 @@ body{
       overflow-x: auto
   }
 }
+.circular-image {
+  border-radius: 50%; /* Make it a circle */
+  width: 50px; /* Adjust the width and height as needed */
+  height: 50px;
+  object-fit: cover; /* Maintain aspect ratio and cover the circle */
+  border: 2px solid #ccc; /* Optional border */
+}
 
 @media only screen and (min-width: 768px) and (max-width: 992px) {
   .chat-app .chat-list {

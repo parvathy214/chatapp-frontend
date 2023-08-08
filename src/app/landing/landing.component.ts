@@ -21,10 +21,12 @@ export class LandingComponent {
   friendsdata:any;
   friendname:any;
   activestatus:any;
+  imageArray:string[]=[];
   dp:any;
-  url:any;
+  imageUrl: string | null = null;
+  chatUrl : string | null = null;
   socket = io('http://localhost:3001');
-  
+
 
   constructor(private chatService: BackendService,private fb:FormBuilder,private route:ActivatedRoute,
     private router :Router,private messageservice:ChatService){
@@ -42,6 +44,7 @@ export class LandingComponent {
     this.socket.emit('loggedinusers',localStorage.getItem('userid'));
     // this.onlinestatus()
       this.uniquelogin();
+      this.fetchprofilepic();
 
   }
   
@@ -66,27 +69,49 @@ export class LandingComponent {
       }
     });
   }
-  
-  uniquelogin(){
-    let userid = this.route.snapshot.params['id'];
-    console.log(userid)
-    this.chatService.uniquelanding(userid).subscribe((res:any)=>{
-        this. userdash = res.data;
-        this.chatService.setfriends(this.userdash.friends);
-        console.log(this.userdash)
-        this.onlinestatus();
-        this.dp = res.data.pic;
-        console.log(this.dp)
-        // this.url ='./assets/'
 
-    })
+uniquelogin() {
+  let userid = this.route.snapshot.params['id'];
+  console.log(userid);
 
+  this.chatService.uniquelanding(userid).subscribe((res: any) => {
+    this.userdash = res.data;
+    this.chatService.setfriends(this.userdash.friends);
+    console.log(this.userdash);
+    this.onlinestatusanddp();
+  });
+}
+fetchprofilepic() {
+  let userid = this.route.snapshot.params['id'];
+  this.chatService.profilepic(userid).subscribe(
+    (res: any) => {
+      console.log('Base64 string fetched from back');
+      this.dp = res.imageBinaryData.data;
 
-  }
-     onlinestatus(){
-      // this.statusArray = [];
+      // Convert the Buffer data to a Uint8Array
+      const uint8Array = new Uint8Array(this.dp);
 
+      // Convert the Uint8Array to a base64 string
+      const base64String = btoa(
+        String.fromCharCode.apply(null, Array.from(uint8Array))
+      );
 
+      // Create a Blob from the decoded base64 data
+      const blob = new Blob([uint8Array], { type: 'image/*' });
+
+      // Create the imageUrl
+      this.imageUrl = URL.createObjectURL(blob);
+      console.log("Image URL is", this.imageUrl);
+    },
+    (error) => {
+      console.error('Error loading dp:', error);
+    }
+  );
+}
+
+ 
+
+     onlinestatusanddp(){
      const friendslist=   this.chatService.getfriends()
      for(let i=0;i<friendslist.length;i++){
       let chatfriend = friendslist[i]
@@ -96,12 +121,22 @@ export class LandingComponent {
          console.log(this.activestatus)
          this.statusArray.push(this.activestatus);
          console.log(this.statusArray)
+         let image = res.image.data     
+         const uint8Array = new Uint8Array(image);
+         const base64String = btoa(
+           String.fromCharCode.apply(null, Array.from(uint8Array))
+         );
+         const blob = new Blob([uint8Array], { type: 'image/*' });
+         this.chatUrl = URL.createObjectURL(blob);
+         console.log("chat Image URL is", this.chatUrl);
+         this.imageArray.push(this.chatUrl);
+
        })
       }
    }
 
   
-  
+  // for opening the chatbox of corressponding friend
     chathead(fid:any){
     console.log(fid)
     let userid = this.route.snapshot.params['id'];
@@ -124,4 +159,6 @@ export class LandingComponent {
 
   }
 
+
+  
 }

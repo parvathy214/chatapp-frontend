@@ -1,10 +1,10 @@
-               
-  <div class="chat" style="background-color: rgb(39, 38, 37); border-radius: 10px;">
+    <div class="chat" style="background-color: rgb(39, 38, 37); border-radius: 10px;">
     <div class="chat-header clearfix">
       <div class="row">
         <div class="col-lg-6">
           <a href="javascript:void(0);" data-toggle="modal" data-target="#view_info">
-            <img src="https://bootdey.com/img/Content/avatar/avatar1.png" alt="avatar">
+            <!-- <img src="https://bootdey.com/img/Content/avatar/avatar1.png" alt="avatar"> -->
+            <img [src]="imageUrl" class="circular-image" alt="Avatar"   >
           </a>
           <div class="chat-about"> 
             <h6 class="m-b-0" style="color: white;" >{{ frienddetails?.username}}</h6>
@@ -38,14 +38,18 @@
         <div>
           <div class="messages" *ngFor="let message of messages;let i=index">
             <div class="receive-msg" *ngIf="message.receiver === msg.sender" style="padding-bottom: 10px;" >
-              <i class="bi bi-clipboard-fill" (click)="copyToClipboard(message.msg,i)"  ></i> <p class="msg-para">{{ message.msg }}</p>
+              <i class="bi bi-clipboard-fill" (click)="copyToClipboard(message.msg,i)"  ></i> <p class="msg-para">{{ message.msg }}
+                <br><small  style="font-size: x-small;" >{{message.time}}</small>
+              </p>
               <span   *ngIf="copiedMessageIndices.includes(i)"  >Message copied!</span>
-            </div>
+            </div> 
             <div class="send-container" *ngIf="message.sender === msg.sender">
               <div class="send-msg">
                 <span   *ngIf="copiedMessageIndices.includes(i)"  >Message copied!</span>
 
-                <i class="bi bi-clipboard-fill" (click)="copyToClipboard(message.msg,i)"  ></i> <p class="msg-para">{{ message.msg }}</p>
+                <i class="bi bi-clipboard-fill" (click)="copyToClipboard(message.msg,i)"  ></i> <p class="msg-para">{{ message.msg }}
+                  <br><small  style="font-size: x-small;" >{{message.time}}</small>
+                </p>
 
               </div>
             </div>
@@ -72,7 +76,7 @@
         </h5>
       </div>
       <div class="col-md-2 text-center align-self-center">
-        <button class="btn btn-primary btn-sm px-3" style="width:100%;"
+        <button class="btn btn-dark  btn-sm px-3" style="width:100%;"
         *ngIf="!(blockedUsers?.includes(userDetails.recipient) || recipientBlockedUsers?.includes(userDetails.sender))"
                 (click)="sendMessage()">Send
         </button>

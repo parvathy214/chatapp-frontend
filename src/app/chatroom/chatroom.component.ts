@@ -38,13 +38,16 @@ export class ChatroomComponent {
   messageList: string[] = [];
   public roomId!: string;
   receiver: any = []         // to receive data coming from backend
-  
+  imageUrl: string | null = null;
+
   userName = ""              // recipient user name
   msg =                      // to send details to backend when send message function called
     {
       msg: "",               
       sender: localStorage.getItem('username'),
-      receiver: ""
+      receiver: "",
+      time: new Date().toLocaleTimeString([], { hour: '2-digit', minute: '2-digit', hour12: true }),
+      image:''
     }
 
 
@@ -77,11 +80,11 @@ export class ChatroomComponent {
       const fid = params['fid'];
       this.chatroom(fid);
       // this.fetchMessage()
+      this.fetchprofilepic(fid)
     });
     this.uid =  localStorage.getItem('userid')
     // this.sendMessage();
-    this.blocklist()
-
+    this.actionlist()
   }
 
 
@@ -113,6 +116,8 @@ export class ChatroomComponent {
        // Listen for messages
        this.socket.on('new_message', (message) => {
         console.log(message);
+        let time = message.time;
+        console.log(time);
         this.openSnackBar(message);
         this.messages.push(message);
         console.log(this.messages);
@@ -127,7 +132,7 @@ export class ChatroomComponent {
   
 
 
-  // for showing notification on incoming messages
+  // for showing notification of incoming messages
   openSnackBar(msg:any) {
     console.log('message sender is',msg.sender);
     if(msg.sender == localStorage.getItem('username')){
@@ -157,21 +162,33 @@ export class ChatroomComponent {
 
   }
 
- 
-  blocklist(){
+  showPopover(index: number) {
+    const popoverDuration = 2000; // Duration in milliseconds
+    this.copiedMessageIndices.push(index); // Add the index of the copied message to the array
+    setTimeout(() => {
+      this.copiedMessageIndices = this.copiedMessageIndices.filter((i) => i !== index); // Remove the index from the array after the specified duration
+    }, popoverDuration);
+  }
+
+
+
+
+  
+ // to display blocklist,mutedlist of the sender and receiver
+  actionlist(){
   let userid = localStorage.getItem('userid')
-  this.chatService.uniquelanding(userid).subscribe((res: any) => {
+
+  // to fetch the blocked & muted friends of the sender
+  this.chatService.uniquelanding(userid).subscribe((res: any) => {      
   this.profiledetails = res.data;
-  console.log('logineduser profile details', this.profiledetails);
   this.blockedUsers = this.profiledetails.blockedUsers || [];
-  this.mutedUsers = this.profiledetails.mutedUsers
+  this.mutedUsers = this.profiledetails.mutedUsers                     // sender's blocked and muted friends of thr sender
+  
+   // to fetch the blocked  friends of the receiver
   this.route.queryParams.subscribe((params) => {
   const fid = params['fid'];   
-  console.log('blocklist fid is ',fid)
-  let userid = localStorage.getItem('userid')
-  this.chatService.chatdetails(userid, fid).subscribe((res: any) => {
+  this.chatService.chatdetails(userid, fid).subscribe((res: any) => {   
   this.frienddetails = res.data
-  console.log('logineduser friend details', this.frienddetails);
   this.recipientBlockedUsers = this.frienddetails.blockedUsers || [];
       })
 
@@ -185,14 +202,14 @@ export class ChatroomComponent {
   blockUser(){
     this.messageservice.blockUser(this.userDetails).subscribe((res:any)=>{
         console.log(res);
-        this.blocklist()
+        this.actionlist()
 
     })
   }
   unblockUser(){
     this.messageservice.unblockUser(this.userDetails).subscribe((res:any)=>{
       console.log(res);
-      this.blocklist()
+      this.actionlist()
 
   })
   }
@@ -204,7 +221,7 @@ export class ChatroomComponent {
   this.messageservice.muteUsers(this.userDetails
     ).subscribe(res=>{
     console.log(res);
-    this.blocklist()
+    this.actionlist()
 
   })
 }
@@ -213,7 +230,7 @@ export class ChatroomComponent {
 unMuteUser(){
   this.messageservice.unMuteUser(this.userDetails).subscribe(res=>{
     console.log(res);
-    this.blocklist()
+    this.actionlist()
   })
 }
 
@@ -226,18 +243,37 @@ ngOnDestroy() {
   
 
 
+//to copy message
+
 copyToClipboard(message: string,index: number) {
   this.clipboard.copy(message);
   this.showPopover(index);
 
 }
-showPopover(index: number) {
-  const popoverDuration = 2000; // Duration in milliseconds
-  this.copiedMessageIndices.push(index); // Add the index of the copied message to the array
-  setTimeout(() => {
-    this.copiedMessageIndices = this.copiedMessageIndices.filter((i) => i !== index); // Remove the index from the array after the specified duration
-  }, popoverDuration);
+
+
+fetchprofilepic(fid:any) {
+
+  let userid = localStorage.getItem('userid')
+  let friendid = fid;
+  this.chatService.chatdetails(userid,friendid).subscribe(
+    (res: any) => {
+      console.log('Base64 string fetched from back');
+      let dp = res.image.data;
+      const uint8Array = new Uint8Array(dp);
+      const base64String = btoa(
+        String.fromCharCode.apply(null, Array.from(uint8Array))
+      );
+      const blob = new Blob([uint8Array], { type: 'image/*' });
+      this.imageUrl = URL.createObjectURL(blob);
+      console.log("Image URL is", this.imageUrl);
+    },
+    (error) => {
+      console.error('Error loading dp:', error);
+    }
+  );
 }
+
 
   }
 

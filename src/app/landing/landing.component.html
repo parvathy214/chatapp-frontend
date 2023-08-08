@@ -14,14 +14,16 @@
 </header>
 <main class="col-md-9 ms-sm-auto col-lg-12 px-md-4"  >
   <div class="d-flex justify-content-between flex-wrap flex-md-nowrap align-items-center pt-3 pb-2 mb-3 border-bottom">
-    <h4  style="color: rgb(84, 83, 83);">{{userdash?.name}}     {{userdash?.username}}</h4>
-      <!-- <img [src]="dp" class="img-fluid img-thumbnail" alt="..."> -->
-        <!-- <img [src]="dp" class="img-fluid img-thumbnail" alt="Profile Picture"> -->
-      
+    <div class="avatar-container">
+      <img [src]="imageUrl" class="circular-image" alt="Avatar"   >
+      <h6  style="color: rgb(84, 83, 83);margin: 0;">Name  :  {{userdash?.name}} </h6>  
+      <h6  style="color: rgb(84, 83, 83);margin: 0;">username : {{userdash?.username}}</h6>  
+    </div>  
+    
     <div class="btn-toolbar mb-2 mb-md-0">
       <div class="btn-group me-2">
         <button type="button" id="b1" class="btn btn-sm btn-outline-secondary" routerLink="/addfriend/{{userdash?._id}}">Add Friend</button>
-        <button type="button" id="b2" class="btn btn-sm btn-outline-secondary" routerLink="/pic">Add photo</button>
+        <button type="button" id="b2" class="btn btn-sm btn-outline-secondary" routerLink="/pic">Profile Picture</button>
       </div>
     </div>
   </div>
@@ -44,7 +46,8 @@
               <ul class="list-unstyled chat-list mt-2 mb-0" *ngFor="let item of userdash?.friends;let i = index">
                 <a (click)="chathead(item._id)">
                   <li class="clearfix">
-                    <img src="https://bootdey.com/img/Content/avatar/avatar1.png" alt="avatar">
+                    <!-- <img src="https://bootdey.com/img/Content/avatar/avatar1.png" alt="avatar"> -->
+                    <img [src]="imageArray[i]" class="circular-image" alt="Avatar"   >
                     <div class="about">
                       <div class="name"  style="color: aliceblue;"  >{{ item.username }}</div>
                       <div class="status"><i class="fa fa-circle " [ngStyle]="{'color': statusArray[i] === 'online' ? '#198754' : '#dc3545'}" ></i> <span  style="color: white;">{{statusArray[i]}}</span> </div>

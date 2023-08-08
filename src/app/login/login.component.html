@@ -1,9 +1,8 @@
 <form [formGroup]="loginform">
 <div class="login-box">
 	<div class="login-snip">
-		<input id="tab-1" type="radio" name="tab" class="sign-in" checked><label for="tab-1" class="tab">Login</label>
-		<!-- <input id="tab-2" type="radio" name="tab" class="sign-up"><label for="tab-2" class="tab">Sign Up</label> -->
-		<div class="login-space">
+		<input id="tab-1" type="radio" name="tab" class="sign-in" checked><label for="tab-1" class="tab">Login</label> 
+		<div class="login-space">  <br>
 			<div class="login">
 				<div class="group">
 					<label for="user" class="label">Email</label>
@@ -13,7 +12,7 @@
                     <p *ngIf="login.email.errors.required" >Field can't be empty</p>
                     <p  *ngIf="login.email.errors.email">Not a Valid Format</p>
                     </div>
-                </div>
+                </div>  <br> 
 				<div class="group">
 					<label for="pass" class="label">Password</label>
 					<input id="pass" type="password" class="input"  placeholder="Enter your password"
@@ -23,13 +22,13 @@
                         <p  *ngIf="login.password.errors.minlength">Requires minimum length of 6</p>
                     </div>
 
-				</div>
+				</div>  <br> 
 				<div class="group">
 					<input id="check" type="checkbox" class="check" checked>
 					<label for="check"><span class="icon"></span> Keep me Signed in</label>
 				</div>
 				<div class="group">
-					<input type="submit" class="button" value="Log In" (click)="enter()" >
+					<input type="submit" class="button" style="border:1px solid white;" value="Log In" (click)="enter()" >
 				</div>
 				<div class="hr"></div>
 				<div class="foot">
@@ -41,3 +40,5 @@
 	</div>
 </div>  
 </form>
+
+  
