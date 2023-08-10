@@ -110,7 +110,7 @@ fetchprofilepic() {
 }
 
  
-
+ //to display online status and profile picture of friends
      onlinestatusanddp(){
      const friendslist=   this.chatService.getfriends()
      for(let i=0;i<friendslist.length;i++){
@@ -141,6 +141,7 @@ fetchprofilepic() {
     console.log(fid)
     let userid = this.route.snapshot.params['id'];
         console.log(userid)
+        localStorage.setItem('chatfriendid',fid)
     this.router.navigate(['land', userid, 'chatroom'], { queryParams: { fid: fid } });
 
 

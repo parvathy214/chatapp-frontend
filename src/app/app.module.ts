@@ -19,6 +19,7 @@ import { AddfriendComponent } from './addfriend/addfriend.component';
 import { AddpicComponent } from './addpic/addpic.component';
 import { TokenInterceptorService } from './token-interceptor.service';
 import { AuthGuard } from './auth.guard';
+import { PopupComponent } from './popup/popup.component';
 @NgModule({
   declarations: [
     AppComponent,
@@ -30,7 +31,8 @@ import { AuthGuard } from './auth.guard';
     HeaderComponent,
     ChatroomComponent,
     AddfriendComponent,
-    AddpicComponent
+    AddpicComponent,
+    PopupComponent
   ],
   imports: [
     BrowserModule,

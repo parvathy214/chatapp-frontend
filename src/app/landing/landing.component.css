@@ -12,7 +12,7 @@ body{
   top: 0;
   padding: 20px;
   z-index: 7;
-  background-color:rgb(39, 38, 37);
+  background-color: rgb(84, 105, 114);
   width: 100%;
   border-radius: 10px ; 
   height: 500px; 
@@ -41,7 +41,7 @@ body{
 }
 
 .people-list .chat-list li:hover {
-  background: rgb(224, 174, 83);
+  background:  rgb(35, 112, 151);
   cursor: pointer;
 
 }

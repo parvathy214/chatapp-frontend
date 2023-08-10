@@ -6,7 +6,11 @@ import { ChatService } from '../chat.service';
 import { io } from 'socket.io-client';
 import {MatSnackBar,MatSnackBarHorizontalPosition,
   MatSnackBarVerticalPosition,} from '@angular/material/snack-bar';
+import {MatDialog, MatDialogModule} from '@angular/material/dialog';
+import {MatMenuTrigger, MatMenuModule} from '@angular/material/menu';
+import {MatButtonModule} from '@angular/material/button';
 import { Clipboard } from '@angular/cdk/clipboard';
+import { PopupComponent } from '../popup/popup.component';
 
 
 
@@ -27,7 +31,6 @@ export class ChatroomComponent {
 
   uid: any;
   fid: any;
-  realid:any;
   chatuser: any;
   frienddetails: any;
   status:any;
@@ -37,10 +40,11 @@ export class ChatroomComponent {
   mutedUsers:any = []                      
   messageList: string[] = [];
   public roomId!: string;
-  receiver: any = []         // to receive data coming from backend
+  receiver: any = []         
   imageUrl: string | null = null;
+  messageUrl: string | null = null;
 
-  userName = ""              // recipient user name
+  userName = ""              
   msg =                      // to send details to backend when send message function called
     {
       msg: "",               
@@ -71,7 +75,8 @@ export class ChatroomComponent {
     private router: Router,
     private messageservice: ChatService,
     private snackBar: MatSnackBar,
-    private clipboard :Clipboard
+    private clipboard :Clipboard,
+    private dialog :MatDialog
     ) {}
 
   
@@ -79,11 +84,9 @@ export class ChatroomComponent {
     this.route.queryParams.subscribe((params) => {
       const fid = params['fid'];
       this.chatroom(fid);
-      // this.fetchMessage()
       this.fetchprofilepic(fid)
     });
     this.uid =  localStorage.getItem('userid')
-    // this.sendMessage();
     this.actionlist()
   }
 
@@ -102,6 +105,7 @@ export class ChatroomComponent {
         console.log('Friend name:', this.frienddetails);
         console.log(this.frienddetails.username)
         this.userName =  this.frienddetails.username
+        localStorage.setItem('receiver',this.userName)
         this.status = this.frienddetails.status
     this.socket = io('http://localhost:3001')
     this.messages = []
@@ -113,17 +117,37 @@ export class ChatroomComponent {
       this.messages = oldMsg
 
     })
-       // Listen for messages
-       this.socket.on('new_message', (message) => {
-        console.log(message);
+
+       // Listen for messages     
+      this.socket.on('new_message', (message) => {
+        console.log('new message is', message);
         let time = message.time;
         console.log(time);
+        
+        let image = message.image.data;
+        console.log('message.image.data.data is', image);
+      
+        const base64Prefix = 'data:';
+        if (image && image.startsWith(base64Prefix)) {
+          // Extract base64 data after the prefix
+          const base64Data = image.slice(image.indexOf(',') + 1); // Find the comma that separates the prefix and the actual data
+          console.log('Extracted base64 data:', base64Data);
+          
+          const uint8Array = new Uint8Array(atob(base64Data).split('').map(char => char.charCodeAt(0)));
+          const contentType = image.slice(base64Prefix.length, image.indexOf(';')); // Extract content type (e.g., 'image/jpeg', 'image/png')
+          const blob = new Blob([uint8Array], { type: contentType });
+          this.messageUrl = URL.createObjectURL(blob);
+          console.log("message Image URL is", this.messageUrl);
+          message.image = this.messageUrl;
+        }
+        
+        console.log('message including messageurl is', message);
         this.openSnackBar(message);
         this.messages.push(message);
-        console.log(this.messages);
-
+        console.log('messages array with each message', this.messages);
       });
-
+      
+      
 
       });
     }
@@ -272,6 +296,13 @@ fetchprofilepic(fid:any) {
       console.error('Error loading dp:', error);
     }
   );
+}
+
+openpopup(){
+this.dialog.open(PopupComponent,{
+  
+})
+
 }
 
 

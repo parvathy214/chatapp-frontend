@@ -1,0 +1,19 @@
+<!-- <h1  mat-dialog-title> choose image</h1>
+<div mat-dialog-content >
+
+</div>
+<div  mat-dialog-actions>
+
+</div> -->
+
+<div  class="screen" style="background-size: cover;">
+    <form >
+        <h3  style="color: rgb(150, 143, 143);text-align:center;">send image</h3>
+        
+            <div class="input-group mb-3" style="margin-top: 100px;">
+                <input  #singleInput type="file" name="csv" class="form-control" id="inputGroupFile02 " (change)="selectfile($event)"><br>
+              </div>
+              <button type="submit" class="btn btn-primary"  (click)="sendpic()">Upload</button> 
+          
+    </form>
+</div>

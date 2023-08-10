@@ -1,4 +1,4 @@
-    <div class="chat" style="background-color: rgb(39, 38, 37); border-radius: 10px;">
+    <div class="chat" style="background-color: rgb(35, 112, 151); border-radius: 10px;">
     <div class="chat-header clearfix">
       <div class="row">
         <div class="col-lg-6">
@@ -38,7 +38,8 @@
         <div>
           <div class="messages" *ngFor="let message of messages;let i=index">
             <div class="receive-msg" *ngIf="message.receiver === msg.sender" style="padding-bottom: 10px;" >
-              <i class="bi bi-clipboard-fill" (click)="copyToClipboard(message.msg,i)"  ></i> <p class="msg-para">{{ message.msg }}
+            <img   *ngIf="message.msg === ''"  [src]="message.image"  style="height:30%" alt="Image" class="chat-image">
+              <i class="bi bi-clipboard-fill" (click)="copyToClipboard(message.msg,i)"  ></i> <p *ngIf="message.msg !== ''" class="msg-para">{{ message.msg }}
                 <br><small  style="font-size: x-small;" >{{message.time}}</small>
               </p>
               <span   *ngIf="copiedMessageIndices.includes(i)"  >Message copied!</span>
@@ -46,8 +47,8 @@
             <div class="send-container" *ngIf="message.sender === msg.sender">
               <div class="send-msg">
                 <span   *ngIf="copiedMessageIndices.includes(i)"  >Message copied!</span>
-
-                <i class="bi bi-clipboard-fill" (click)="copyToClipboard(message.msg,i)"  ></i> <p class="msg-para">{{ message.msg }}
+                <img    *ngIf="message.msg === ''" [src]="message.image"  style="height:30%" alt="Image" class="chat-image">
+                <i class="bi bi-clipboard-fill" (click)="copyToClipboard(message.msg,i)"  ></i> <p class="msg-para"  *ngIf="message.msg !== ''">{{ message.msg }}
                   <br><small  style="font-size: x-small;" >{{message.time}}</small>
                 </p>
 
@@ -76,7 +77,8 @@
         </h5>
       </div>
       <div class="col-md-2 text-center align-self-center">
-        <button class="btn btn-dark  btn-sm px-3" style="width:100%;"
+        <button  (click)="openpopup()">image</button>
+        <button class="btn btn-primary  btn-sm px-3" style="width:100%;"
         *ngIf="!(blockedUsers?.includes(userDetails.recipient) || recipientBlockedUsers?.includes(userDetails.sender))"
                 (click)="sendMessage()">Send
         </button>
