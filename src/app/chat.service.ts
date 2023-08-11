@@ -11,7 +11,7 @@ export class ChatService {
   private userid!: string;
   public friendid!: string;
   socket:any
-  
+
 
 
   constructor(private http: HttpClient) {
@@ -46,6 +46,8 @@ unMuteUser(data:any){
   console.log("unmute user service")
   return this.http.post(`${this.api}/unmute_users`,{data})
 }
+
+
 
 }
 

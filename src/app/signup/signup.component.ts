@@ -17,8 +17,8 @@ export class SignupComponent  {
     
    Signupform= this.fb.group(
     {
-      name :['',[Validators.required,Validators.pattern('^[a-zA-Z]+$')]],
-      username:['',[Validators.required, Validators.pattern('^[a-zA-Z0-9]+$')]],
+      name :['',[Validators.required,Validators.pattern('^[a-zA-Z ]+$')]],
+      username:['',[Validators.required, Validators.pattern('^[a-zA-Z 0-9]+$')]],
       email:['',[Validators.required, Validators.email]],
       password:['', [Validators.required, Validators.minLength(6)]],
       confirmpassword:['']
@@ -72,6 +72,7 @@ export class SignupComponent  {
       alert("username is taken");
     }
     else{
+       console.log(res.message,res.newuser)
       alert("signup success!!! please login")
       this.router.navigate([''])
     }

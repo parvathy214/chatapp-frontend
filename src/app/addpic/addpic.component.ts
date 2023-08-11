@@ -1,6 +1,7 @@
 import { Component,ElementRef, ViewChild } from '@angular/core';
 import { BackendService } from '../backend.service';
 import { Router } from '@angular/router';
+import { Location } from '@angular/common';
 
 @Component({
   selector: 'app-addpic',
@@ -17,7 +18,7 @@ export class AddpicComponent {
   // learner:any
 
 
-constructor(private api:BackendService,private router:Router){}
+constructor(private api:BackendService,private router:Router,private location:Location){}
     files:  any;
 
 selectfile(event:any){
@@ -34,8 +35,8 @@ addpic(){
 
  })
  alert('Photo uploaded')
+ this.location.back();
 
-//  this.router.navigate(['/']);
 }
 
 

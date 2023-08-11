@@ -43,7 +43,6 @@ export class ChatroomComponent {
   receiver: any = []         
   imageUrl: string | null = null;
   messageUrl: string | null = null;
-
   userName = ""              
   msg =                      // to send details to backend when send message function called
     {
@@ -67,7 +66,6 @@ export class ChatroomComponent {
     }
     value:any
 
-
   constructor(
     private chatService: BackendService,
     private fb: FormBuilder,
@@ -76,15 +74,16 @@ export class ChatroomComponent {
     private messageservice: ChatService,
     private snackBar: MatSnackBar,
     private clipboard :Clipboard,
-    private dialog :MatDialog
+    private dialog :MatDialog,
     ) {}
 
-  
+
   ngOnInit() {
     this.route.queryParams.subscribe((params) => {
       const fid = params['fid'];
       this.chatroom(fid);
       this.fetchprofilepic(fid)
+     
     });
     this.uid =  localStorage.getItem('userid')
     this.actionlist()
@@ -93,8 +92,6 @@ export class ChatroomComponent {
 
   chatroom(fid: any) {
     console.log('chatroom function executed');
-    // let userid = this.chatService.getUserId();
-    // this.messageservice.setUserId(userid);
     let userid = localStorage.getItem('userid')
     console.log('userid:', userid);
 
@@ -113,9 +110,30 @@ export class ChatroomComponent {
     this.userDetails.recipient = this.userName
     this.socket.emit('register', this.userDetails);
     this.socket.on('old_message', (oldMsg) => {       
-      // console.log("from backend ",oldMsg);
+      console.log("from backend old message is",oldMsg);
       this.messages = oldMsg
-
+      for(const i in this.messages){
+        this.messages[i].msg = oldMsg[i].msg
+        console.log('msg is',this.messages[i].msg)
+        if (oldMsg[i].image !== null  && typeof oldMsg[i].image === 'object' ) {
+          const imagearray = oldMsg[i].image.data.data        
+          console.log(imagearray)
+          const decodedValue = imagearray.map((asciiValue:number) => String.fromCharCode(asciiValue)).join('');
+           console.log('decoded value is',decodedValue);          
+           const base64Prefix = 'data:';
+           if (decodedValue && decodedValue.startsWith(base64Prefix)) {
+            const base64Data = decodedValue.slice(decodedValue.indexOf(',') + 1);  
+            console.log('refix slice data',base64Data)   
+            const uint8Array = new Uint8Array(atob(base64Data).split('').map(char => char.charCodeAt(0)));
+            const blob = new Blob([uint8Array], { type: 'image/*' });
+              let oldimageurl = URL.createObjectURL(blob);
+            console.log("message oldImage URL is",oldimageurl);
+           this.messages[i].image = oldimageurl
+          
+        }
+      console.log('this.message array is',this.messages)
+    }
+  }
     })
 
        // Listen for messages     
@@ -136,9 +154,11 @@ export class ChatroomComponent {
           const uint8Array = new Uint8Array(atob(base64Data).split('').map(char => char.charCodeAt(0)));
           const contentType = image.slice(base64Prefix.length, image.indexOf(';')); // Extract content type (e.g., 'image/jpeg', 'image/png')
           const blob = new Blob([uint8Array], { type: contentType });
-          this.messageUrl = URL.createObjectURL(blob);
+            this.messageUrl = URL.createObjectURL(blob);
           console.log("message Image URL is", this.messageUrl);
           message.image = this.messageUrl;
+         
+
         }
         
         console.log('message including messageurl is', message);
@@ -298,6 +318,8 @@ fetchprofilepic(fid:any) {
   );
 }
 
+
+//to open a form to send images
 openpopup(){
 this.dialog.open(PopupComponent,{
   

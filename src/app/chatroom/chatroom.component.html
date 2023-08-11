@@ -62,13 +62,19 @@
   <div class="chat-footer">
     <div class="row">
       <div class="col-md-10">
-        <div class="form-group mb-0">
-          <input type="text"  style="border-radius: 4 px ; border: 1px solid gray;"
-          *ngIf="!(blockedUsers?.includes(userDetails.recipient) || recipientBlockedUsers?.includes(userDetails.sender))"
-            placeholder="Type a message"
+        <div style="display: flex; align-items: center;">
+          <input type="text"
+                 style="border-radius: 4px; border: 1px solid gray; flex: 1;"
+                 *ngIf="!(blockedUsers?.includes(userDetails.recipient) || recipientBlockedUsers?.includes(userDetails.sender))"
+                 placeholder="Type a message"
                  class="form-control"
-                 [(ngModel)]="newMessage" (keyup)="$event.keyCode == 13 && sendMessage()"/>
+                 [(ngModel)]="newMessage" 
+                 (keyup.enter)="sendMessage()" />
+          <span (click)="openpopup()" style="cursor: pointer;">
+            <i class="bi bi-paperclip"></i>
+          </span>
         </div>
+        
         <h5 *ngIf="blockedUsers?.includes(userDetails.recipient)">
           You blocked this contact !
         </h5>
@@ -77,7 +83,7 @@
         </h5>
       </div>
       <div class="col-md-2 text-center align-self-center">
-        <button  (click)="openpopup()">image</button>
+        <!-- <button  (click)="openpopup()">image</button> -->
         <button class="btn btn-primary  btn-sm px-3" style="width:100%;"
         *ngIf="!(blockedUsers?.includes(userDetails.recipient) || recipientBlockedUsers?.includes(userDetails.sender))"
                 (click)="sendMessage()">Send
